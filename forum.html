@@ -4,6 +4,8 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
     <style>
         @import url('http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css');
+        
+        .mainform{width:500px; background-color:#efefef; padding:25px;}
     </style>
 </head>
 <body>
@@ -11,49 +13,38 @@
 
 
 <table >
-<th>Comment</th><th>Owner</th>
+
 <tbody data-bind="foreach: commentsList">
     <tr>
         <td>
-              <span data-bind="text: name"></span>
+             <p><b><span data-bind="text: owner"></span>:</b>  <span data-bind="text: commenttext"></span></p>
          </td>
      
     </tr>
 </tbody>
 </table>
-<input type="text" id="name" placeholder="Your Name"/><br />
- <textarea type="text" id="comment" placeholder="Your comment"></textarea><br />
- <button data-bind="click: addItem">add comment</button>
+<br />  
 
- <form role="form">
+ <form class="mainform">
+ <h3>Add your comment</h3><br />  
   <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+   <input type="text" id="name" placeholder="Your Name" class="form-control"/>
   </div>
+  
   <div class="form-group">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    <textarea type="text" id="comment" placeholder="Your comment" class="form-control"></textarea>
   </div>
-  <div class="form-group">
-    <label for="exampleInputFile">File input</label>
-    <input type="file" id="exampleInputFile">
-    <p class="help-block">Example block-level help text here.</p>
-  </div>
-  <div class="checkbox">
-    <label>
-      <input type="checkbox"> Check me out
-    </label>
-  </div>
-  <button type="submit" class="btn btn-default">Submit</button>
+
+ <button data-bind="click: addItem">add comment</button>
 </form>
 
  <hr />
   <button data-bind="click: save">Save/Debug</button>
 
     <script>
-      function Comment(name,owner) {
+        function Comment(commenttext, owner) {
               var self = this;
-              self.name = ko.observable(name);
+              self.commenttext = ko.observable(commenttext);
               self.owner = ko.observable(owner);
         }
 
@@ -61,10 +52,27 @@
             var self = this;
 
             //Initial data for demo
-            self.commentsList = ko.observableArray
-            ([ new Comment("Comment one","bob"),
-               new Comment("Another job", "jo")
-             ]);
+           // self.commentsList = ko.observableArray
+           // ([ new Comment("Comment one","bob"),
+            //   new Comment("Another job", "jo")
+            // ]);
+
+        //Load data with GET from forum API
+            $.ajax({
+                type: "GET",
+                url: "forumAPI.html",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    alert(data);
+                    self.commentsList(data); //Put the response in ObservableArray
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+
+            });
+
 
             //Functions
             self.addItem = function () {
