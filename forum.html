@@ -1,0 +1,89 @@
+<html>
+<head>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.debug.js" ></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+    <style src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css"></style>
+</head>
+<body>
+    <h1>Michael's To Do App</h1>
+
+
+<table >
+<th>name</th>
+<tbody data-bind="foreach: todoList">
+    <tr >
+        <td>
+ 
+             
+              <span data-bind="visible: !editing(), text: name, click: $root.editItem, css: { isDone: done()==1 }"></span>
+              <input data-bind="visible: editing, value: name, hasFocus: editing" />
+
+         </td>
+         <td > 
+              <input type="checkbox" data-bind="checked: done, click: $root.completeItem" /> 
+         </td>
+                <td><a href="#" data-bind="click: $root.removeItem">Remove</a></td>
+    </tr>
+</tbody>
+</table>
+ 
+ <input type="text" id="newdata" />
+ <button data-bind="click: addItem">add one</button>
+
+ <hr />
+  <button data-bind="click: save">Save/Debug</button>
+
+    <script>
+      function ToDo(name) {
+              var self = this;
+              self.name = ko.observable(name);
+              self.done = ko.observable(0);
+              self.editing = ko.observable(false);
+        }
+
+        function ToDoModel() {
+            var self = this;
+
+            //Initial data for demo
+            self.todoList = ko.observableArray
+            ([ new ToDo("Job number one"),
+               new ToDo("Another job")
+             ]);
+
+            //Functions
+            self.addItem = function () {
+                self.todoList.push(new ToDo($('#newdata').val()));
+            }
+
+            self.completeItem = function (item) {
+                item.done = !item.done; //invert the current value
+                return true; //make checkbox work
+            }
+
+            self.editItem = function (item) {
+                item.editing(true);
+
+            }
+
+            self.removeItem = function (item) {
+                self.todoList.remove(item);
+            }
+
+            self.save=function(item)
+            {
+                var jsonData = ko.toJSON(self.todoList);
+                alert(jsonData);
+            }
+
+        }
+        
+
+        ko.applyBindings(new ToDoModel());
+
+    </script>
+ <style>
+ .isDone{color:Silver;}
+ 
+ </style>
+</body>
+</html>
