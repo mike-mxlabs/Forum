@@ -2,6 +2,8 @@
 <head>
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.debug.js" ></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+    <script src="knockout.mapping.js"></script>
+
     <style>
         @import url('http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css');
         
@@ -17,7 +19,7 @@
 <tbody data-bind="foreach: commentsList">
     <tr>
         <td>
-             <p><b><span data-bind="text: owner"></span>:</b>  <span data-bind="text: commenttext"></span></p>
+             <p><b><span data-bind="text: owner"></span>:</b>  <span data-bind="text: commentText"></span></p>
          </td>
      
     </tr>
@@ -42,44 +44,37 @@
   <button data-bind="click: save">Save/Debug</button>
 
     <script>
-        function Comment(commenttext, owner) {
-              var self = this;
-              self.commenttext = ko.observable(commenttext);
-              self.owner = ko.observable(owner);
+        function Comment(owner,commentText )
+        {
+            var self = this;
+            self.commentText = ko.observable(commentText);
+            self.owner = ko.observable(owner);
         }
 
-        function CommentsModel() {
+        function CommentsModel()
+        {
             var self = this;
 
-            //Initial data for demo
-           // self.commentsList = ko.observableArray
-           // ([ new Comment("Comment one","bob"),
-            //   new Comment("Another job", "jo")
-            // ]);
+            self.commentsList = ko.observableArray([]);
 
-        //Load data with GET from forum API
-            $.ajax({
-                type: "GET",
-                url: "forumAPI.html",
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    alert(data);
-                    self.commentsList(data); //Put the response in ObservableArray
-                },
-                error: function (error) {
-                    alert(error.status + "<--and--> " + error.statusText);
-                }
+            $.get("forumAPI.html", function (data)
+            {
+                //var x = ko.mapping.fromJS(data);
+                var x = JSON.parse(data);
+
+                x.forEach(function (entry)
+                {
+                     self.commentsList.push(new Comment(entry.owner,entry.commentText));
+                });
 
             });
 
-
-            //Functions
-            self.addItem = function () {
-                self.commentsList.push(new Comment($('#comment').val(), $('#name').val()));
+            self.addItem = function ()
+            {
+                self.commentsList.push(new Comment($('#name').val(), $('#comment').val()));
             }
 
-            self.save=function(item)
+            self.save = function (item)
             {
                 var jsonData = ko.toJSON(self.commentsList);
                 alert(jsonData);
