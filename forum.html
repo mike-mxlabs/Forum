@@ -2,25 +2,24 @@
 <head>
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.debug.js" ></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
-    <script src="knockout.mapping.js"></script>
+   
 
     <style>
         @import url('http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css');
-        
+        @import url('forum.css');
         .mainform{width:500px; background-color:#efefef; padding:25px;}
     </style>
 </head>
 <body>
-    <h1>Flat Forum</h1>
-
+    <h1>Forum</h1>
 
 <table >
 
 <tbody data-bind="foreach: commentsList">
     <tr>
-        <td>
+        <td class="comment">
              <p><b><span data-bind="text: owner"></span>:</b>  <span data-bind="text: commentText"></span></p>
-            <small><span data-bind="text: date" style="color: silver;"></span></small>
+            <small><span data-bind="text: date" class="date"></span></small>
 
          </td>
      
@@ -39,60 +38,14 @@
     <textarea type="text" id="comment" placeholder="Your comment" class="form-control"></textarea>
   </div>
 
- <button data-bind="click: addItem">add comment</button>
+ <button data-bind="click: addItem" class="btn btn-success">add comment</button>
 </form>
 
  <hr />
   <button data-bind="click: save">Save/Debug</button>
 
-    <script>
-        function Comment(owner, commentText)
-        {
-            var self = this;
-            self.commentText = ko.observable(commentText);
-            self.owner = ko.observable(owner);
-            self.date = Date();
-        }
+    <!-- load js -->
+    <script src="forum.js"></script>
 
-        function CommentsModel()
-        {
-            var self = this;
-
-            self.commentsList = ko.observableArray([]);
-
-            $.get("forumAPI.html", function (data)
-            {
-                //var x = ko.mapping.fromJS(data);
-                var x = JSON.parse(data);
-
-                x.forEach(function (entry)
-                {
-                    self.commentsList.push(new Comment(entry.owner, entry.commentText));
-                });
-
-            });
-
-            self.addItem = function ()
-            {
-                self.commentsList.push(new Comment($('#name').val(), $('#comment').val()));
-                //Todo : send comment via AJAX to db.
-            }
-
-            self.save = function (item)
-            {
-                var jsonData = ko.toJSON(self.commentsList);
-                alert(jsonData);
-            }
-
-        }
-
-
-        ko.applyBindings(new CommentsModel());
-
-    </script>
- <style>
- .isDone{color:Silver;}
- 
- </style>
 </body>
 </html>
