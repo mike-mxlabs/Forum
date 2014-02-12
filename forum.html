@@ -5,80 +5,58 @@
     <style src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css"></style>
 </head>
 <body>
-    <h1>Michael's To Do App</h1>
+    <h1>Flat Forum</h1>
 
 
 <table >
-<th>name</th>
-<tbody data-bind="foreach: todoList">
-    <tr >
+<th>Comment</th><th>Owner</th>
+<tbody data-bind="foreach: commentsList">
+    <tr>
         <td>
- 
-             
-              <span data-bind="visible: !editing(), text: name, click: $root.editItem, css: { isDone: done()==1 }"></span>
-              <input data-bind="visible: editing, value: name, hasFocus: editing" />
-
+              <span data-bind="text: name"></span>
          </td>
-         <td > 
-              <input type="checkbox" data-bind="checked: done, click: $root.completeItem" /> 
-         </td>
-                <td><a href="#" data-bind="click: $root.removeItem">Remove</a></td>
+     
     </tr>
 </tbody>
 </table>
- 
- <input type="text" id="newdata" />
- <button data-bind="click: addItem">add one</button>
+<input type="text" id="name" placeholder="Your Name"/><br />
+ <textarea type="text" id="comment" placeholder="Your comment"></textarea><br />
+ <button data-bind="click: addItem">add comment</button>
 
  <hr />
   <button data-bind="click: save">Save/Debug</button>
 
     <script>
-      function ToDo(name) {
+      function Comment(name,owner) {
               var self = this;
               self.name = ko.observable(name);
-              self.done = ko.observable(0);
-              self.editing = ko.observable(false);
+              self.owner = ko.observable(owner);
         }
 
-        function ToDoModel() {
+        function CommentsModel() {
             var self = this;
 
             //Initial data for demo
-            self.todoList = ko.observableArray
-            ([ new ToDo("Job number one"),
-               new ToDo("Another job")
+            self.commentsList = ko.observableArray
+            ([ new Comment("Comment one","bob"),
+               new Comment("Another job", "jo")
              ]);
 
             //Functions
             self.addItem = function () {
-                self.todoList.push(new ToDo($('#newdata').val()));
-            }
-
-            self.completeItem = function (item) {
-                item.done = !item.done; //invert the current value
-                return true; //make checkbox work
-            }
-
-            self.editItem = function (item) {
-                item.editing(true);
-
-            }
-
-            self.removeItem = function (item) {
-                self.todoList.remove(item);
+                self.commentsList.push(new Comment($('#comment').val(), $('#name').val()));
             }
 
             self.save=function(item)
             {
-                var jsonData = ko.toJSON(self.todoList);
+                var jsonData = ko.toJSON(self.commentsList);
                 alert(jsonData);
             }
 
         }
-        
 
-        ko.applyBindings(new ToDoModel());
+
+        ko.applyBindings(new CommentsModel());
 
     </script>
  <style>
