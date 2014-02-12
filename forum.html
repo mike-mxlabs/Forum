@@ -2,7 +2,9 @@
 <head>
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.0.0.debug.js" ></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
-    <style src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css"></style>
+    <style>
+        @import url('http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css');
+    </style>
 </head>
 <body>
     <h1>Flat Forum</h1>
@@ -22,6 +24,28 @@
 <input type="text" id="name" placeholder="Your Name"/><br />
  <textarea type="text" id="comment" placeholder="Your comment"></textarea><br />
  <button data-bind="click: addItem">add comment</button>
+
+ <form role="form">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputFile">File input</label>
+    <input type="file" id="exampleInputFile">
+    <p class="help-block">Example block-level help text here.</p>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> Check me out
+    </label>
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
 
  <hr />
   <button data-bind="click: save">Save/Debug</button>
